@@ -447,54 +447,51 @@ function rotateMatrix(matrix) {
  *  [2, 9, 5, 9]    => [2, 5, 9, 9]
  *  [-2, 9, 5, -3]  => [-3, -2, 5, 9]
  */
-function sortByAsc(/* arr */) {
-  throw new Error('Not implemented');
-  // function swap(array, firstIndex, secondIndex) {
-  //   const items = array;
-  //   const temp = items[firstIndex];
-  //   items[firstIndex] = items[secondIndex];
-  //   items[secondIndex] = temp;
-  // }
+function sortByAsc(arr) {
+  function swap(array, firstIndex, secondIndex) {
+    const items = array;
+    const temp = items[firstIndex];
+    items[firstIndex] = items[secondIndex];
+    items[secondIndex] = temp;
+  }
 
-  // function partition(items, left, right) {
-  //   const pivot = items[Math.floor((right + left) / 2)];
-  //   let i = left;
-  //   let j = right;
-  //   while (i <= j) {
-  //     while (items[i] < pivot) {
-  //       i += 1;
-  //     }
-  //     while (items[j] > pivot) {
-  //       j -= 1;
-  //     }
-  //     if (i <= j) {
-  //       swap(items, i, j);
-  //       i += 1;
-  //       j -= 1;
-  //     }
-  //   }
-  //   return i;
-  // }
+  function partition(items, left, right) {
+    const pivot = items[Math.floor((right + left) / 2)];
+    let i = left;
+    let j = right;
+    while (i <= j) {
+      while (items[i] < pivot) {
+        i += 1;
+      }
+      while (items[j] > pivot) {
+        j -= 1;
+      }
+      if (i <= j) {
+        swap(items, i, j);
+        i += 1;
+        j -= 1;
+      }
+    }
+    return i;
+  }
 
-  // function quickSort(items, l, r) {
-  //   const left = typeof l !== 'number' ? 0 : l;
-  //   const right = typeof r !== 'number' ? items.length - 1 : r;
-  //   let index;
-  //   if (items.length > 1) {
-  //     index = partition(items, left, right);
-  //     if (left < index - 1) {
-  //       quickSort(items, left, index - 1);
-  //     }
-  //     if (index < right) {
-  //       quickSort(items, index, right);
-  //     }
-  //   }
-  //   return items;
-  // }
+  function quickSort(items, l, r) {
+    const left = typeof l !== 'number' ? 0 : l;
+    const right = typeof r !== 'number' ? items.length - 1 : r;
+    let index;
+    if (items.length > 1) {
+      index = partition(items, left, right);
+      if (left < index - 1) {
+        quickSort(items, left, index - 1);
+      }
+      if (index < right) {
+        quickSort(items, index, right);
+      }
+    }
+    return items;
+  }
 
-  // for (let i = 0; i < arr.length; i += 1) {
-  //   quickSort(arr[i]);
-  // }
+  quickSort(arr);
 }
 
 /**
@@ -554,37 +551,41 @@ function shuffleChar(str, iterations) {
  * @param {number} number The source number
  * @returns {number} The nearest larger number, or original number if none exists.
  */
-function getNearestBigger(/* number */) {
-  // Возвращает число ближайшее большее составленное из цифр этого же числа перестановкой цифр
-  // Алгоритм:
-  // 1. Формируется массив цифр числа (ch[])
-  // 2. В цикле переставляем две цифры с индексами i и j, где i меньше j.
-  // Переставляем только те цифры, которые в результате перестановки сформируют число больше исходного.
-  // 3. Из всех полученных таким образом чисел выбираем минимальное.
-  function Swap(arr, i, j) {
-    const number = arr;
-    const temp = number[i];
-    number[i] = number[j];
-    number[j] = temp;
+function getNearestBigger(number) {
+  const num = number;
+  function swap(arr, i, j) {
+    const n = arr;
+    const temp = n[i];
+    n[i] = n[j];
+    n[j] = temp;
   }
-  function MyNextBigger(num) {
-    if (num < 0) throw new Error('Отрицательный аргумент');
-    let result = Number.MAX_VALUE;
-    const ch = num.ToString().split(''); // массив цифр числа
-    for (let i = 0; i < ch.Length; i += 1) {
-      for (let j = i + 1; j < ch.Length; j += 1) {
-        if (ch[i] < ch[j]) {
-          Swap(ch, i, j); // переставили цифры
-          const newNum = +ch.join('');
-          result = Math.Min(result, newNum);
-          Swap(ch, i, j); // переставили обратно цифры
-        } // перестановка не даст большего числа, пропускаем.
+
+  if (num < 0) {
+    throw new Error('Отрицательный аргумент');
+  }
+
+  let result = Number.MAX_VALUE;
+  const ch = [];
+  const temp = `${num}`;
+  for (let i = 0; i < temp.length; i += 1) {
+    ch.push(temp[i]);
+  }
+  for (let i = 0; i < ch.length; i += 1) {
+    for (let j = i + 1; j < ch.length; j += 1) {
+      if (+ch[i] < +ch[j]) {
+        swap(ch, i, j);
+        const newNum = +ch.reduce((acc, item) => acc + item, '');
+        result = Math.min(result, newNum);
+        swap(ch, i, j);
       }
     }
-    if (result === Number.MAX_VALUE) return null;
-    return result;
   }
-  throw new Error('Not implemented');
+
+  if (result === Number.MAX_VALUE) {
+    return num;
+  }
+
+  return result;
 }
 
 module.exports = {
