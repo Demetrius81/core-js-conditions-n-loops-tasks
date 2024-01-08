@@ -552,40 +552,51 @@ function shuffleChar(str, iterations) {
  * @returns {number} The nearest larger number, or original number if none exists.
  */
 function getNearestBigger(number) {
-  const num = number;
-  function swap(arr, i, j) {
-    const n = arr;
-    const temp = n[i];
-    n[i] = n[j];
-    n[j] = temp;
+  function Swap(arr, i, j) {
+    const num = arr;
+    const temp = num[i];
+    num[i] = num[j];
+    num[j] = temp;
   }
 
-  if (num < 0) {
-    throw new Error('Отрицательный аргумент');
-  }
-
-  let result = Number.MAX_VALUE;
-  const ch = [];
-  const temp = `${num}`;
-  for (let i = 0; i < temp.length; i += 1) {
-    ch.push(temp[i]);
-  }
-  for (let i = 0; i < ch.length; i += 1) {
-    for (let j = i + 1; j < ch.length; j += 1) {
-      if (+ch[i] < +ch[j]) {
-        swap(ch, i, j);
-        const newNum = +ch.reduce((acc, item) => acc + item, '');
-        result = Math.min(result, newNum);
-        swap(ch, i, j);
-      }
+  function SortSubarray(num, m, n) {
+    let i = m;
+    let j = n;
+    while (i < j) {
+      Swap(num, i, j);
+      i += 1;
+      j -= 1;
     }
   }
 
-  if (result === Number.MAX_VALUE) {
-    return num;
+  const numberstring = `${number}`;
+  const sNum = new Array(numberstring.length)
+    .fill('')
+    .map((_, i) => numberstring[i]);
+  let lastDigitSeen = sNum[sNum.length - 1];
+  let i;
+  let j;
+  for (i = sNum.length - 1; i >= 0; i -= 1) {
+    if (lastDigitSeen > sNum[i]) {
+      break;
+    }
+    lastDigitSeen = sNum[i];
   }
 
-  return result;
+  if (i >= 0) {
+    for (j = sNum.length - 1; j > i; j -= 1) {
+      if (sNum[j] > sNum[i]) {
+        break;
+      }
+    }
+
+    Swap(sNum, i, j);
+    SortSubarray(sNum, i + 1, numberstring.length - 1);
+  } else {
+    return number;
+  }
+
+  return +sNum.reduce((acc, item) => acc + item, '');
 }
 
 module.exports = {
